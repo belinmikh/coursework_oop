@@ -1,17 +1,16 @@
 import logging
 import sys
-
 from tkinter import filedialog as fd
 from tkinter import messagebox as mb
 
 from src.fileio import VacanciesManager
-from src.gui import StartWindow, EditorWindow
+from src.gui import EditorWindow, StartWindow
 from src.hh_api import HH
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     sw = StartWindow()
@@ -19,11 +18,11 @@ if __name__ == '__main__':
 
     try:
         if sw.fp:
-            logging.info(f'Filepath: {sw.fp}')
+            logging.info(f"Filepath: {sw.fp}")
         else:
-            logging.info('File will be created')
+            logging.info("File will be created")
     except AttributeError:
-        logging.info('File dialogue interrupted by user')
+        logging.info("File dialogue interrupted by user")
         sys.exit()
 
     vm = VacanciesManager(sw.fp)
@@ -41,18 +40,15 @@ if __name__ == '__main__':
     # else:
 
     path = fd.asksaveasfilename(
-        initialfile='example.json',
-        filetypes=(("JSON файл", ".json"),)
+        initialfile="example.json", filetypes=(("JSON файл", ".json"),)
     )
 
     if path:
         ew.vm.save(path)
         mb.showinfo(
-            title='HH-parser',
-            message=f'Файл успешно сохранён как {ew.vm.path}'
+            title="HH-parser", message=f"Файл успешно сохранён как {ew.vm.path}"
         )
     else:
         mb.showinfo(
-            title='HH-parser',
-            message='Файл не был выбран, результат не будет сохранён'
+            title="HH-parser", message="Файл не был выбран, результат не будет сохранён"
         )

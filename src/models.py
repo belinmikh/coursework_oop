@@ -16,14 +16,23 @@ class Vacancy(BaseModel):
     salary_mean: int | None
 
     __slots__ = (
-        'name', 'requirement', 'url',
-        'salary_from', 'salary_to', 'salary_currency', 'salary_mean'
+        "name",
+        "requirement",
+        "url",
+        "salary_from",
+        "salary_to",
+        "salary_currency",
+        "salary_mean",
     )
 
     def __init__(
-            self, name: str, requirement: str | None = None, url: str | None = None,
-            salary_from: int | None = None, salary_to: int | None = None,
-            salary_currency: str | None = None
+        self,
+        name: str,
+        requirement: str | None = None,
+        url: str | None = None,
+        salary_from: int | None = None,
+        salary_to: int | None = None,
+        salary_currency: str | None = None,
     ):
         if isinstance(name, str):
             self.name = name
@@ -85,41 +94,36 @@ class Vacancy(BaseModel):
 
     @staticmethod
     def from_dict(data: dict):
-        name = data['name']
+        name = data["name"]
 
         try:
-            requirement = data['snippet']['requirement']
+            requirement = data["snippet"]["requirement"]
         except Exception:
             requirement = None
 
-        url = data.get('alternate_url')
+        url = data.get("alternate_url")
 
-        salary = data.get('salary')
+        salary = data.get("salary")
 
         if salary:
-            salary_from = salary['from']
-            salary_to = salary['to']
-            salary_currency = salary['currency']
+            salary_from = salary["from"]
+            salary_to = salary["to"]
+            salary_currency = salary["currency"]
         else:
             salary_from = None
             salary_to = None
             salary_currency = None
 
-        return Vacancy(
-            name, requirement, url,
-            salary_from, salary_to, salary_currency
-        )
+        return Vacancy(name, requirement, url, salary_from, salary_to, salary_currency)
 
     def to_dict(self):
         return {
-            'name': self.name,
-            'snippet': {
-                'requirement': self.requirement
+            "name": self.name,
+            "snippet": {"requirement": self.requirement},
+            "alternate_url": self.url,
+            "salary": {
+                "from": self.salary_from,
+                "to": self.salary_to,
+                "currency": self.salary_currency,
             },
-            'alternate_url': self.url,
-            'salary': {
-                'from': self.salary_from,
-                'to': self.salary_to,
-                'currency': self.salary_currency
-            }
         }
