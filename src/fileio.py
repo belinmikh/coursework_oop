@@ -58,3 +58,6 @@ class VacanciesManager(FileManager):
         with open(path, "w") as file:
             json.dump({"items": [v.to_dict() for v in self.vacancies]}, file)
         self.path = path
+
+    def clear(self):
+        self.vacancies = []

@@ -20,3 +20,7 @@ class FileManager(ABC):
     @abstractmethod
     def filter(self):
         pass
+
+    @abstractmethod
+    def clear(self):
+        pass

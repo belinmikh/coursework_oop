@@ -7,6 +7,7 @@ from tkinter import (
     IntVar,
     Label,
     Spinbox,
+    StringVar,
     Tk,
     W,
 )
@@ -63,6 +64,7 @@ class EditorWindow(Tk):
     only_with_salary: BooleanVar
     txt: Entry
     spin: IntVar
+    clear_text: StringVar
 
     vm: VacanciesManager
     hh: HH
@@ -95,7 +97,15 @@ class EditorWindow(Tk):
         # tab0
 
         lbl_decor = Label(tab0, text="hh.ru", font=("Arial", 24, "bold"), bg="gray95")
-        lbl_decor.place(x=290, y=70)
+        lbl_decor.place(x=290, y=30)
+
+        self.clear_text = StringVar()
+        self.clear_text.set(f"Очистить\n{len(self.vm.vacancies)}\nвакансий")
+
+        btn_clr = Button(
+            tab0, textvariable=self.clear_text, font=("Arial", 12), command=self.clear
+        )
+        btn_clr.place(x=290, y=80, width=80, height=90)
 
         lbl_txt = Label(tab0, text="Вакансия должна включать:", font=("Arial", 12))
         lbl_txt.place(x=0, y=0, width=250, height=50)
@@ -190,6 +200,7 @@ class EditorWindow(Tk):
             msg = "Таких вакансий не существует либо произошла ошибка"
 
         mb.showinfo(title="HH-parser", message=msg)
+        self.clear_text.set(f"Очистить\n{len(self.vm.vacancies)}\nвакансий")
 
     # tab1
 
@@ -217,6 +228,7 @@ class EditorWindow(Tk):
             message=f"{prev_len - len(self.vm.vacancies)} вакансий без указанной з/п успешно удалены"
             f"\n({prev_len} -> {len(self.vm.vacancies)})",
         )
+        self.clear_text.set(f"Очистить\n{len(self.vm.vacancies)}\nвакансий")
 
     # tab2
 
@@ -241,3 +253,13 @@ class EditorWindow(Tk):
         print(msg + top_vacs_table)
 
         mb.showinfo(title="HH-parser", message="Вакансии выведены в консоль")
+
+    def clear(self):
+        if len(self.vm.vacancies) == 0:
+            msg = "Нечего удалять!"
+        else:
+            self.vm.clear()
+            msg = "Вакансии успешно удалены"
+
+        mb.showinfo(title="HH-parser", message=msg)
+        self.clear_text.set(f"Очистить\n{len(self.vm.vacancies)}\nвакансий")
