@@ -52,7 +52,7 @@ class Vacancy(BaseModel):
         if salary_to:
             try:
                 self.salary_to = int(salary_to)
-            except TypeError:
+            except ValueError:
                 raise TypeError("Can't recognize salary_to as an integer")
         else:
             self.salary_to = None
@@ -60,7 +60,7 @@ class Vacancy(BaseModel):
         if salary_from:
             try:
                 self.salary_from = int(salary_from)
-            except TypeError:
+            except ValueError:
                 raise TypeError("Can't recognize salary_from as an integer")
         else:
             self.salary_from = None
@@ -80,17 +80,8 @@ class Vacancy(BaseModel):
         else:
             self.salary_mean = 0
 
-    def __le__(self, other):
-        return self.salary_mean <= other.salary_mean
-
     def __lt__(self, other):
         return self.salary_mean < other.salary_mean
-
-    def __ge__(self, other):
-        return self.salary_mean >= other.salary_mean
-
-    def __gt__(self, other):
-        return self.salary_mean > other.salary_mean
 
     @staticmethod
     def from_dict(data: dict):

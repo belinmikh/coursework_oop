@@ -6,50 +6,29 @@ from src.abc_api import BaseAPI
 
 
 class HH(BaseAPI):
-    url: str
-    headers: dict
-    params: dict
+    __url: str
+    __headers: dict
+    __params: dict
 
-    __slots__ = ("url", "headers", "params")
+    __slots__ = ("__url", "__headers", "__params")
 
     def __init__(self):
-        self.url = "https://api.hh.ru/vacancies"
-        self.headers = {"User-Agent": "HH-User-Agent"}
-        self.params = {"text": "", "page": 0, "per_page": 100}
+        self.__url = "https://api.hh.ru/vacancies"
+        self.__headers = {"User-Agent": "HH-User-Agent"}
+        self.__params = {"text": "", "page": 0, "per_page": 100}
 
     def get(self, arg) -> list:
         to_return = []
-        self.params["text"] = arg
-        while self.params.get("page") != 20:
-            response = requests.get(self.url, headers=self.headers, params=self.params)
+        self.__params["text"] = arg
+        while self.__params.get("page") != 20:
+            response_json = requests.get(self.__url, headers=self.__headers, params=self.__params).json()
             try:
-                to_return.extend(response.json()["items"])
+                to_return.extend(response_json["items"])
             except KeyError:
                 logging.warning(
-                    f"hh.ru has no items having status {response.status_code}"
+                    f"hh.ru has no items or broken"
                 )
                 return to_return
-            self.params["page"] += 1
-        self.params["page"] = 0
+            self.__params["page"] += 1
+        self.__params["page"] = 0
         return to_return
-
-
-# class HH:
-#     """
-#     Класс для работы с API HeadHunter
-#     Класс Parser является родительским классом, который вам необходимо реализовать
-#     """
-#
-#     def __init__(self):
-#         self.url = 'https://api.hh.ru/vacancies'
-#         self.headers = {'User-Agent': 'HH-User-Agent'}
-#         self.params = {'text': '', 'page': 0, 'per_page': 100}
-#         self.vacancies = []
-#
-#     def load_vacancies(self, keyword):
-#         self.params['text'] = keyword
-#         while self.params.get('page') != 20:
-#             response = requests.get(self.url, headers=self.headers, params=self.params)
-#             vacancies = response.json()['items']
-#             self.vacancies.extend(vacancies)
-#             self.params['page'] += 1
